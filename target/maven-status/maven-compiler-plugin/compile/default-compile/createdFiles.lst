@@ -1,0 +1,7 @@
+com\prodcat\repository\ProdCatRepository.class
+com\prodcat\service\ProdCatServImpl.class
+com\prodcat\rest\CrudProductCatagoryApplication.class
+com\prodcat\entity\Product.class
+com\prodcat\service\ProdCatServ.class
+com\prodcat\controller\ProdCatController.class
+com\prodcat\entity\Category.class
