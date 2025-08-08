@@ -31,16 +31,12 @@ public class ProdCatController {
 
 	 @GetMapping("/categories")
 	 public Object getAllCategories(@RequestParam(defaultValue = "0") int page,
-	                                @RequestParam(defaultValue = "2") int size,
-	                                @RequestParam(defaultValue = "false") boolean metadata) {
+	                                @RequestParam(defaultValue = "2") int size) {
 	     Pageable pageable = PageRequest.of(page, size);
 	     Page<Category> categoryPage = prodCatServ.getAllCategories(pageable);
 	     
-	     if (metadata) {
-	         return categoryPage;
-	     } else {
 	         return categoryPage.getContent();
-	     }
+	     
 	 }
 
 	    @PostMapping("/categories")
@@ -71,21 +67,17 @@ public class ProdCatController {
 
 	    @GetMapping("/products")
 	    public Object getAllProducts(@RequestParam(defaultValue = "0") int page,
-	                                 @RequestParam(defaultValue = "2") int size,
-	                                 @RequestParam(defaultValue = "false") boolean metadata) {
+	                                 @RequestParam(defaultValue = "2") int size
+	                                 ) {
 	        Pageable pageable = PageRequest.of(page, size);
 	        Page<ProductDTO> productPage = prodCatServ.getAllProducts(pageable);
 
-	        if (metadata) {
-	            return productPage;
-	        } else {
 	            return productPage.getContent();
-	        }
 	    }
 
 	    @GetMapping("/products/{id}")
 	    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-	        ProductDTO productDTO = prodCatServ.getProductById(id); // No Optional<Product> needed
+	        ProductDTO productDTO = prodCatServ.getProductById(id); 
 
 	        if (productDTO != null) {
 	            return ResponseEntity.ok(productDTO);
@@ -94,13 +86,11 @@ public class ProdCatController {
 	        }
 	    }
 
-	    // 4. PUT - update product by ID
 	    @PutMapping("/products/{id}")
 	    public Product updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
 	        return prodCatServ.updateProduct(id, productDetails);
 	    }
 
-	    // 5. DELETE - delete product by ID
 	    @DeleteMapping("/products/{id}")
 	    public void deleteProduct(@PathVariable Long id) {
 	        prodCatServ.deleteProduct(id);

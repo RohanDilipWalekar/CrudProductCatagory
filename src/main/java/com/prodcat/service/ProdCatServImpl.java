@@ -1,5 +1,6 @@
 package com.prodcat.service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,6 @@ public class ProdCatServImpl implements ProdCatServ {
 
     @Autowired
     private ProductRepository productRepository;
-
-    // **Category Methods**
     
     @Override
     public Page<Category> getAllCategories(Pageable pageable) {
@@ -52,9 +51,6 @@ public class ProdCatServImpl implements ProdCatServ {
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }
-
-    // **Product Methods**
-    
     @Override
     public Page<Product> getAllProducts(int page) {
         return productRepository.findAll(PageRequest.of(page, 2));
@@ -81,6 +77,7 @@ public class ProdCatServImpl implements ProdCatServ {
     public Product updateProduct(Long id, Product productDetails) {
         Product product = productRepository.findById(id).orElseThrow();
         product.setName(productDetails.getName());
+        product.setDescription(productDetails.getDescription());
         product.setPrice(productDetails.getPrice());
         product.setCategory(productDetails.getCategory());
         return productRepository.save(product);
@@ -106,9 +103,13 @@ public class ProdCatServImpl implements ProdCatServ {
     @Override
     public Product createProduct(Product product) {
         Long catId = product.getCategory().getCat_id();
-        Category category = categoryRepository.findById(catId)
-            .orElseThrow(() -> new RuntimeException("Category not found with ID: " + catId));
-        
+        Category category = null;
+
+        try {
+            category = categoryRepository.findById(catId).get(); 
+        } catch (NoSuchElementException e) {
+            throw new RuntimeException("Category not found with ID: " + catId);
+        }
         product.setCategory(category);
         return productRepository.save(product);
     }
